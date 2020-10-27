@@ -1,11 +1,16 @@
 import React from 'react';
+import "./home.component.css";
+import BackgroundComponent from '../background/background.component';
 
 class HomeComponent extends React.Component {
     render() {
         return (
-          <div>
-            Hello World form home {this.props.name}
-          </div>
+            <>
+            <BackgroundComponent></BackgroundComponent>
+             <div className="container">
+                yes
+             </div>
+            </>
         );
       }
 }

@@ -35,7 +35,7 @@ class TimerComponent extends React.Component {
       
       this.remainingPathColor = this.COLOR_CODES.info.color;
 
-      this.startTimer(5);
+      // this.startTimer(5);
     }
 
     componentDidMount() {
@@ -76,7 +76,7 @@ class TimerComponent extends React.Component {
       } catch (error) {
         
       }
-      
+
       this.timerInterval = setInterval(() => {
         
         // The amount of time passed increments by one
@@ -170,7 +170,7 @@ class TimerComponent extends React.Component {
                 </g>
               </svg>
               <span id="base-timer-label" className="base-timer__label">
-                {this.formatTimeLeft(20)}
+                -:-
               </span>
             </div>            
           </>

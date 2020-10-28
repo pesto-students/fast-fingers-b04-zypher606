@@ -3,8 +3,19 @@ import "./home.component.scss";
 import BackgroundComponent from '../background/background.component';
 import logo from '../../../../../assets/img/Icon awesome-keyboard.png';
 import startArrow from '../../../../../assets/img/Icon awesome-play.png';
+import { useHistory } from "react-router-dom";
 
 class HomeComponent extends React.Component {
+    
+    // constructor(props) {
+    //     super(props);
+    // }
+
+    handleClick() {
+        this.props.history.push(`/gameplay`)
+        // this.history.push("/fast-fingers/gameplay");
+    }
+
     render() {
         return (
           <>
@@ -37,7 +48,7 @@ class HomeComponent extends React.Component {
                 <br></br>
 
                 <div className="row text-center">
-                    <a href="javascript:void(0)" className="start-game-btn"> <img src={startArrow} alt="start icon" />START GAME</a>
+                    <a href="javascript:void(0)" onClick={this.handleClick.bind(this)} className="start-game-btn"> <img src={startArrow} alt="start icon" />START GAME</a>
                 </div>
             </div>
           </>

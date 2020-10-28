@@ -7,7 +7,7 @@ class TimerComponent extends React.Component {
       super(props);
 
       // Start with an initial value of 20 seconds
-      this.TIME_LIMIT = 20;
+      this.TIME_LIMIT = 5;
 
       // Initially, no time has passed, but this will count up
       // and subtract from the TIME_LIMIT
@@ -35,7 +35,19 @@ class TimerComponent extends React.Component {
       
       this.remainingPathColor = this.COLOR_CODES.info.color;
 
-      this.startTimer();
+      this.startTimer(5);
+    }
+
+    componentDidMount() {
+      this.props.onRef(this);
+    }
+    componentWillUnmount() {
+      this.props.onRef(undefined);
+    }
+
+    method() {
+      this.startTimer(5);
+      window.alert('do stuff')
     }
 
     formatTimeLeft(time) {
@@ -54,7 +66,17 @@ class TimerComponent extends React.Component {
       return `${minutes}:${seconds}`;
     }
 
-    startTimer() {
+    startTimer(time) {
+      this.TIME_LIMIT = time;
+      this.timePassed = 0;
+      this.timeLeft = this.TIME_LIMIT;
+
+      try {
+        clearInterval(this.timerInterval);
+      } catch (error) {
+        
+      }
+      
       this.timerInterval = setInterval(() => {
         
         // The amount of time passed increments by one
@@ -68,9 +90,16 @@ class TimerComponent extends React.Component {
 
         // this.setRemainingPathColor(this.timeLeft);
 
-        if (this.timeLeft === 0) clearInterval(this.timerInterval)
+        if (this.timeLeft <= 0) {
+          this.stopTimer();
+        }
 
       }, 1000);
+    }
+
+    stopTimer() {
+      this.props.timeup();
+      clearInterval(this.timerInterval);
     }
 
 

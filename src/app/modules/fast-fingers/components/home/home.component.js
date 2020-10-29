@@ -3,7 +3,6 @@ import "./home.component.scss";
 import BackgroundComponent from '../background/background.component';
 import logo from '../../../../../assets/img/Icon awesome-keyboard.png';
 import startArrow from '../../../../../assets/img/Icon awesome-play.png';
-import { useHistory } from "react-router-dom";
 
 class HomeComponent extends React.Component {
     
@@ -12,7 +11,7 @@ class HomeComponent extends React.Component {
     // }
 
     handleClick() {
-        this.props.history.push(`/gameplay`)
+        this.props.history.push(`/gameplay`);
         // this.history.push("/fast-fingers/gameplay");
     }
 

@@ -2,7 +2,6 @@ import React from 'react';
 import "./gameplay.component.scss";
 import BackgroundComponent from '../background/background.component';
 import TimerComponent from '../timer/timer.component';
-import startArrow from '../../../../../assets/img/Icon awesome-play.png';
 import dictionary from "../../mock-data/dictionary.json";
 import iconPerson from '../../../../../assets/img/Icon material-person.png';
 import iconGamepad from '../../../../../assets/img/Icon awesome-gamepad.png';
@@ -18,15 +17,19 @@ class GameplayComponent extends React.Component {
             difficultyLevel: 1, // 1 => easy, 2 => medium, 3 => Hard
             difficultyFactor: 1,  // 1 => easy, 1.5 => Med, 2 => Hard
             gameOver: false,
-            score: 0
+            score: 0,
         }
 
         this.dictionary = dictionary;
 
         this.timeup = this.timeup.bind(this);
         this.validateResult = this.validateResult.bind(this);
-        this.playAgain = this.playAgain.bind(this);
+        // this.playAgain = this.playAgain.bind(this);
         this.startGameplay = this.startGameplay.bind(this);
+
+        // this.child = React.createRef();
+
+        // this.child = this.child.bind(this);
     }
 
     componentDidMount() {
@@ -36,7 +39,7 @@ class GameplayComponent extends React.Component {
     startGameplay() {
         const targetStr = this.getRandomWord(1);
         this.setState({target: targetStr});
-        this.timerRef.startTimer(2);
+        this.refs.child.startTimer(2);
 
         this.scoreCounter = setInterval(() => {
             this.setState({score: this.state.score + 1});
@@ -46,7 +49,7 @@ class GameplayComponent extends React.Component {
     continueGameplay() {
         const targetStr = this.getRandomWord(1);
         this.setState({target: targetStr});
-        this.timerRef.startTimer(2);
+        this.refs.child.startTimer(2);
     }
 
 
@@ -85,14 +88,25 @@ class GameplayComponent extends React.Component {
     }
 
     onClick = () => {
-        this.timerRef.method() // do stuff
+        this.child.method(); // do stuff
     }
 
     playAgain() {
+        // this.startGameplay();
+        // this.child.method()
+        // this.child.current.startTimer(2);
         window.location.reload(false);
     }
 
+    // playAgain = () => {
+    //     this.refs.child.getWrappedInstance().startTimer(2);
+    //     // this.child.current.startTimer(2);
+    // };
+
     render() {
+        // const playAgain = () => {
+        //     this.startGameplay().bind(this);
+        // };
         return (
           <>
             <BackgroundComponent></BackgroundComponent>
@@ -114,13 +128,14 @@ class GameplayComponent extends React.Component {
                     this.state.gameOver === false && 
                     <div className="row inprogress">
                         <TimerComponent
-                            onRef={ref => (this.timerRef = ref)}
+                            ref="child" 
+                            // onRef={ref => (this.child = ref)}
                             timeup={this.timeup}>
                         </TimerComponent>
 
                         <div className="col-sm-12 text-center">
                             <h4 className="target-text">{this.state.target}</h4>
-                            <input value={this.state.result} onChange={(e) => {this.handleAnswerChange(e)}} className="textbox-user-input" type="text" name="username" placeholder="TYPE YOUR NAME"/>
+                            <input autoFocus value={this.state.result} onChange={(e) => {this.handleAnswerChange(e)}} className="textbox-user-input" type="text" name="username" placeholder="TYPE YOUR NAME"/>
                         </div>
 
                         <div className="col-sm-12">
@@ -145,7 +160,7 @@ class GameplayComponent extends React.Component {
                         
 
                         <div className="col-sm-12 text-center">
-                            <a onClick={this.playAgain.bind(this)} className="start-game-btn"> PLAY AGAIN</a>
+                            <a onClick={this.playAgain} className="start-game-btn"> PLAY AGAIN</a>
                         </div>
                     </div>
                 }

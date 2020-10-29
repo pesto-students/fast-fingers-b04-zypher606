@@ -34,15 +34,17 @@ class TimerComponent extends React.Component {
       };
       
       this.remainingPathColor = this.COLOR_CODES.info.color;
+      
+      // this.startTimer = this.startTimer.bind(this);
 
       // this.startTimer(5);
     }
 
     componentDidMount() {
-      this.props.onRef(this);
+      // this.props.onRef(this);
     }
     componentWillUnmount() {
-      this.props.onRef(undefined);
+      // this.props.onRef(undefined);
     }
 
     method() {
@@ -66,7 +68,7 @@ class TimerComponent extends React.Component {
       return `${minutes}:${seconds}`;
     }
 
-    startTimer(time) {
+    startTimer = (time) => {
       this.TIME_LIMIT = time;
       this.timePassed = 0;
       this.timeLeft = this.TIME_LIMIT;
@@ -179,5 +181,10 @@ class TimerComponent extends React.Component {
       
       
 }
+
+// export default React.forwardRef((props, ref) => 
+// <TimerComponent 
+//   innerRef={ref} {...props}
+// />);
 
 export default TimerComponent;

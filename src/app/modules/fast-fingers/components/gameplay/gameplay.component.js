@@ -24,12 +24,13 @@ class GameplayComponent extends React.Component {
 
         this.timeup = this.timeup.bind(this);
         this.validateResult = this.validateResult.bind(this);
-        // this.playAgain = this.playAgain.bind(this);
+        this.restartGameplay = this.restartGameplay.bind(this);
         this.startGameplay = this.startGameplay.bind(this);
 
         // this.child = React.createRef();
 
         // this.child = this.child.bind(this);
+        this.timerRef = React.createRef();
     }
 
     componentDidMount() {
@@ -39,8 +40,9 @@ class GameplayComponent extends React.Component {
     startGameplay() {
         const targetStr = this.getRandomWord(1);
         this.setState({target: targetStr});
-        this.refs.child.startTimer(2);
+        this.timerRef.current.startTimer(4);
 
+        clearInterval(this.scoreCounter);
         this.scoreCounter = setInterval(() => {
             this.setState({score: this.state.score + 1});
         }, 1000);
@@ -49,7 +51,12 @@ class GameplayComponent extends React.Component {
     continueGameplay() {
         const targetStr = this.getRandomWord(1);
         this.setState({target: targetStr});
-        this.refs.child.startTimer(2);
+        this.timerRef.current.startTimer(4);
+
+        clearInterval(this.scoreCounter);
+        this.scoreCounter = setInterval(() => {
+            this.setState({score: this.state.score + 1});
+        }, 1000);
     }
 
 
@@ -80,7 +87,7 @@ class GameplayComponent extends React.Component {
     }
 
     validateResult(result) {
-        console.log(this.state.target, result)
+        // console.log(this.state.target, result)
         if (this.state.target === result) {
             this.setState({result: ''});
             this.continueGameplay();
@@ -91,20 +98,26 @@ class GameplayComponent extends React.Component {
         this.child.method(); // do stuff
     }
 
-    playAgain() {
-        // this.startGameplay();
-        // this.child.method()
-        // this.child.current.startTimer(2);
-        window.location.reload(false);
+    restartGameplay() {
+        this.setState({ gameOver: false });
+        this.startGameplay();
+
+        // window.location.reload(false);
     }
 
-    // playAgain = () => {
-    //     this.refs.child.getWrappedInstance().startTimer(2);
+    stopGame() {
+        this.setState({ gameOver: true });
+        clearInterval(this.scoreCounter);
+        this.timerRef.current.stopTimer();
+    }
+
+    // restartGameplay = () => {
+    //     this.timerRef.current.getWrappedInstance().startTimer(2);
     //     // this.child.current.startTimer(2);
     // };
 
     render() {
-        // const playAgain = () => {
+        // const restartGameplay = () => {
         //     this.startGameplay().bind(this);
         // };
         return (
@@ -125,10 +138,10 @@ class GameplayComponent extends React.Component {
                 <br></br>
 
                 {   
-                    this.state.gameOver === false && 
-                    <div className="row inprogress">
+                    // this.state.gameOver === false && 
+                    <div className={`row inprogress ${this.state.gameOver === true ? 'hidden' : ''}`}>
                         <TimerComponent
-                            ref="child" 
+                            ref={this.timerRef} 
                             // onRef={ref => (this.child = ref)}
                             timeup={this.timeup}>
                         </TimerComponent>
@@ -142,7 +155,7 @@ class GameplayComponent extends React.Component {
                             <br></br>
                             <br></br>
                             <br></br>
-                            <a className="start-game-btn"> X STOP GAME</a>
+                            <a onClick={this.stopGame.bind(this)} className="start-game-btn"> X STOP GAME</a>
                         </div>
                     </div>
                 }
@@ -160,7 +173,7 @@ class GameplayComponent extends React.Component {
                         
 
                         <div className="col-sm-12 text-center">
-                            <a onClick={this.playAgain} className="start-game-btn"> PLAY AGAIN</a>
+                            <a onClick={this.restartGameplay.bind(this)} className="start-game-btn"> PLAY AGAIN</a>
                         </div>
                     </div>
                 }

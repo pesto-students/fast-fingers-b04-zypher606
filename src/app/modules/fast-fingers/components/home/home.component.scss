@@ -1,4 +1,4 @@
-.container {
+.home-container {
     padding-top: 100px;
 }
 
@@ -37,13 +37,13 @@
 }
 
 .textbox-username {
-    width: 400px;
+    width: 100%;
     height: 48px;
     padding: 0px 14px;
     background: #fff;
     border: none;
     border-radius: 8px;
-    margin-bottom: 15px;
+    margin-bottom: 6px;
 
     &:focus {
         outline: none;
@@ -51,7 +51,7 @@
 }
 
 .select-difficulty {
-    width: 400px;
+    width: 100%;
     height: 48px;
     padding: 0px 14px;
     background: transparent;
@@ -59,6 +59,7 @@
     border-radius: 8px;
     border: solid 1px #fff;
     color: #fff;
+    margin-bottom: 6px;
 
     &:focus {
         outline: none;
@@ -70,6 +71,8 @@
     margin-left: auto;
     margin-right: auto;
     font-size: 27px;
+    background: transparent;
+    border: none;
 
     img {
         height: 76px;
@@ -83,4 +86,21 @@
     &:active {
         color: #ff5155;
     }
+}
+
+.form-error {
+    color: red;
+}
+
+.user-details-form {
+    .form-group {
+        height: 77px;
+
+        .form-error {
+            padding-left: 4px;
+            font-size: 15px;
+        }
+    }
+    
+
 }

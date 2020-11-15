@@ -1,6 +1,7 @@
 import React from 'react';
 import "./gameplay.component.scss";
 import BackgroundComponent from '../background/background.component';
+import ScoreBoardComponent from '../score-board/score-board.component';
 import TimerComponent from '../timer/timer.component';
 import dictionary from "../../mock-data/dictionary.json";
 import iconPerson from '../../../../../assets/img/Icon material-person.png';
@@ -18,6 +19,7 @@ class GameplayComponent extends React.Component {
             difficultyFactor: 1,  // 1 => easy, 1.5 => Med, 2 => Hard
             gameOver: false,
             score: 0,
+            name: localStorage.getItem("name")
         }
 
         this.dictionary = dictionary;
@@ -31,6 +33,7 @@ class GameplayComponent extends React.Component {
 
         // this.child = this.child.bind(this);
         this.timerRef = React.createRef();
+        this.scoreBoardRef = React.createRef();
     }
 
     componentDidMount() {
@@ -82,8 +85,16 @@ class GameplayComponent extends React.Component {
     }
 
     timeup() {
+        // Game over code in here
         this.setState({result: '', gameOver: true});
         clearTimeout(this.scoreCounter);
+
+        const scoreBoard = localStorage.getItem("score-board") ? JSON.parse(localStorage.getItem("score-board")) : [];
+        scoreBoard.push(this.state.score);
+        console.log("==========>", scoreBoard)
+        localStorage.setItem("score-board", JSON.stringify(scoreBoard));
+
+        this.scoreBoardRef.current.refreshBoard();
     }
 
     validateResult(result) {
@@ -99,7 +110,7 @@ class GameplayComponent extends React.Component {
     }
 
     restartGameplay() {
-        this.setState({ gameOver: false });
+        this.setState({ gameOver: false, score: 0 });
         this.startGameplay();
 
         // window.location.reload(false);
@@ -123,12 +134,15 @@ class GameplayComponent extends React.Component {
         return (
           <>
             <BackgroundComponent></BackgroundComponent>
-            <div className="container">
+            <div className="container gameplay-container">
                 <div className="row header-container">
                     <div className="col-sm-6 text-left">
                         
-                        <h4><img src={iconPerson} alt="logo"/> PLAYER NAME</h4>
-                        <h4><img src={iconGamepad} alt="logo"/> LEVEL : MEDIUM</h4>
+                        <h4><img src={iconPerson} alt="logo"/> {this.state.name}</h4>
+                        <h4><img src={iconGamepad} alt="logo"/> LEVEL : {this.state.level}</h4>
+                        
+                        <ScoreBoardComponent ref={ this.scoreBoardRef }/>
+
                     </div>
                     <div className="col-sm-6 text-right">
                         <h4>fast fingers</h4>

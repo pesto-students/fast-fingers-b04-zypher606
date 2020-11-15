@@ -45,6 +45,7 @@ class TimerComponent extends React.Component {
     }
     componentWillUnmount() {
       // this.props.onRef(undefined);
+      this.stopTimer();
     }
 
     method() {

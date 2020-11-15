@@ -1,0 +1,33 @@
+.score-board-container {
+    width: 256px;
+    border: solid 1px;
+    height: 440px;
+    /* float: left; */
+    position: absolute;
+    border-radius: 7px;
+}
+
+.score-board-header {
+    position: fixed;
+    width: 236px;
+}
+
+.board-list {
+    list-style: none;
+    color: #fff;
+    margin-top: 30px;
+    height: calc(100% - 43px);
+    overflow-y: scroll;
+
+    li {
+        margin: 9px 0;
+    }
+
+    .personal-best {
+        font-size: 12px;
+        color: #ff5155;
+    }
+}
+.hidden {
+    display: none;
+}

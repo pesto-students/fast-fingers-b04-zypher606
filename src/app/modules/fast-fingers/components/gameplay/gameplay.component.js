@@ -44,6 +44,7 @@ class GameplayComponent extends React.Component {
         const targetStr = this.getRandomWord(1);
         this.setState({target: targetStr});
         this.timerRef.current.startTimer(4);
+        this.resetColorCode();
 
         clearInterval(this.scoreCounter);
         this.scoreCounter = setInterval(() => {
@@ -55,6 +56,9 @@ class GameplayComponent extends React.Component {
         const targetStr = this.getRandomWord(1);
         this.setState({target: targetStr});
         this.timerRef.current.startTimer(4);
+
+        // this.resetColorCode();
+
 
         clearInterval(this.scoreCounter);
         this.scoreCounter = setInterval(() => {
@@ -82,6 +86,7 @@ class GameplayComponent extends React.Component {
         this.setState({result: res});
 
         this.validateResult(res);
+
     }
 
     timeup() {
@@ -102,6 +107,44 @@ class GameplayComponent extends React.Component {
         if (this.state.target === result) {
             this.setState({result: ''});
             this.continueGameplay();
+            this.resetColorCode();
+        } else {
+            this.changeColorCode(result);
+        }
+    }
+
+    changeColorCode = (result) => {
+        const size = this.state.target.split('').length;
+
+        // if (!result) {
+        //     this.resetColorCode();
+        //     return;
+        // }
+
+        let isCorrectTillNow = true
+        for (let i = 0; i < Math.min(size, result.length); i += 1) {
+            if (result[i] === this.state.target[i] && isCorrectTillNow === true) {
+                const el = document.querySelector(`#target-text span:nth-child(${i+1})`);
+                el.style.color = '#54ba18';
+            } else {
+                const el = document.querySelector(`#target-text span:nth-child(${i+1})`);
+                el.style.color = '#445298';
+                isCorrectTillNow = false;
+            }
+        }
+
+        for (let j = result.length; j < size; j++) {
+            const el = document.querySelector(`#target-text span:nth-child(${j+1})`);
+            el.style.color = 'white'
+        }
+
+    }
+
+    resetColorCode() {
+        const size = this.state.target.split('').length;
+        for (let i = 0; i < size; i += 1) {
+            const el = document.querySelector(`#target-text span:nth-child(${i+1})`);
+            el.style.color = 'white'
         }
     }
 
@@ -131,6 +174,12 @@ class GameplayComponent extends React.Component {
         // const restartGameplay = () => {
         //     this.startGameplay().bind(this);
         // };
+
+        const targetText = this.state.target.split('').map((item, index) => {
+            return (
+                <span key={index.toString()}>{item}</span>
+            )
+        })
         return (
           <>
             <BackgroundComponent></BackgroundComponent>
@@ -161,7 +210,9 @@ class GameplayComponent extends React.Component {
                         </TimerComponent>
 
                         <div className="col-sm-12 text-center">
-                            <h4 className="target-text">{this.state.target}</h4>
+                            <h4 id="target-text" className="target-text">
+                                { targetText }
+                            </h4>
                             <input autoFocus value={this.state.result} onChange={(e) => {this.handleAnswerChange(e)}} className="textbox-user-input" type="text" name="username" placeholder="TYPE YOUR NAME"/>
                         </div>
 

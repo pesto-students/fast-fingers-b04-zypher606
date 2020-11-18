@@ -15,12 +15,15 @@ class GameplayComponent extends React.Component {
         this.state = {
             result: '',
             target: 'HELLO',
-            difficultyLevel: 1, // 1 => easy, 2 => medium, 3 => Hard
+            difficultyLevel: localStorage.getItem("level"), // 1 => easy, 2 => medium, 3 => Hard
             difficultyFactor: 1,  // 1 => easy, 1.5 => Med, 2 => Hard
+            difficultyFactorDelta: 0.1,
             gameOver: false,
             score: 0,
             name: localStorage.getItem("name")
         }
+
+        // this.setupDifficultyFactor();
 
         this.dictionary = dictionary;
 
@@ -37,13 +40,40 @@ class GameplayComponent extends React.Component {
     }
 
     componentDidMount() {
+        this.setupDifficultyFactor();
         this.startGameplay();
     }
 
+    componentWillUnmount() {
+        this.stopGame();
+    }
+
+    setupDifficultyFactor() {
+        let factor = 1;
+        switch (this.state.difficultyLevel) {
+            case 'EASY':
+                factor = 1
+                break;
+            case 'MEDIUM':
+                factor = 1.5;
+                break;
+            case 'HARD':
+                factor = 2;
+                break;
+            default:
+                factor = 1;
+                break;
+        }
+
+        this.setState({difficultyFactor: factor});
+    }
+
     startGameplay() {
-        const targetStr = this.getRandomWord(1);
+        const targetStr = this.getRandomWord();
         this.setState({target: targetStr});
-        this.timerRef.current.startTimer(4);
+
+        const timerCount = this.getTimeLimit();
+        this.timerRef.current.startTimer(timerCount);
         this.resetColorCode();
 
         clearInterval(this.scoreCounter);
@@ -52,10 +82,20 @@ class GameplayComponent extends React.Component {
         }, 1000);
     }
 
+    getTimeLimit() {
+        debugger
+        const len = this.state.target.length;
+        const factor = this.state.difficultyFactor;
+        const calc = Math.ceil(len / factor);
+        return Math.max(calc, 2);
+    }
+
     continueGameplay() {
-        const targetStr = this.getRandomWord(1);
-        this.setState({target: targetStr});
-        this.timerRef.current.startTimer(4);
+        const targetStr = this.getRandomWord();
+        this.setState({target: targetStr, difficultyFactor: this.state.difficultyFactor + this.state.difficultyFactorDelta});
+        
+        const timerCount = this.getTimeLimit();
+        this.timerRef.current.startTimer(timerCount);
 
         // this.resetColorCode();
 
@@ -67,13 +107,15 @@ class GameplayComponent extends React.Component {
     }
 
 
-    getRandomWord(level) {
+    getRandomWord() {
+        debugger
+        const level = this.state.difficultyFactor;
         let dictionary;
-        if (level === 1) {
+        if (level >= 1 && level < 1.5) {
             dictionary = this.dictionary.filter(d => d.length <= 4);
-        } else if (level === 2) {
+        } else if (level >= 1.5 && level < 2) {
             dictionary = this.dictionary.filter(d => d.length >=  5 && d.length <= 8);
-        } else if (level === 3) {
+        } else if (level >= 2) {
             dictionary = this.dictionary.filter(d => d.length > 8);
         }
 
@@ -165,6 +207,13 @@ class GameplayComponent extends React.Component {
         this.timerRef.current.stopTimer();
     }
 
+    quitGame = () => {
+        this.stopGame();
+        this.timeup();
+        localStorage.clear();
+        this.props.history.push(`/`);    
+    }
+
     // restartGameplay = () => {
     //     this.timerRef.current.getWrappedInstance().startTimer(2);
     //     // this.child.current.startTimer(2);
@@ -187,8 +236,8 @@ class GameplayComponent extends React.Component {
                 <div className="row header-container">
                     <div className="col-sm-6 text-left">
                         
-                        <h4><img src={iconPerson} alt="logo"/> {this.state.name}</h4>
-                        <h4><img src={iconGamepad} alt="logo"/> LEVEL : {this.state.level}</h4>
+                        <h4><img src={iconPerson} alt="logo 1"/> {this.state.name}</h4>
+                        <h4><img src={iconGamepad} alt="logo 2"/> LEVEL : {this.state.level}</h4>
                         
                         <ScoreBoardComponent ref={ this.scoreBoardRef }/>
 
@@ -216,15 +265,11 @@ class GameplayComponent extends React.Component {
                             <input autoFocus value={this.state.result} onChange={(e) => {this.handleAnswerChange(e)}} className="textbox-user-input" type="text" name="username" placeholder="TYPE YOUR NAME"/>
                         </div>
 
-                        <div className="col-sm-12">
-                            <br></br>
-                            <br></br>
-                            <br></br>
-                            <a onClick={this.stopGame.bind(this)} className="start-game-btn"> X STOP GAME</a>
-                        </div>
+                        
                     </div>
                 }
 
+              
 
 
                 {
@@ -238,10 +283,27 @@ class GameplayComponent extends React.Component {
                         
 
                         <div className="col-sm-12 text-center">
-                            <a onClick={this.restartGameplay.bind(this)} className="start-game-btn"> PLAY AGAIN</a>
+                            <a href onClick={this.restartGameplay.bind(this)} className="start-game-btn"> PLAY AGAIN</a>
                         </div>
                     </div>
                 }
+
+
+
+                {   
+                    this.state.gameOver === false && 
+                    <div className="row">
+                        <button onClick={this.stopGame.bind(this)} className="stop-game-btn"> <span className="Icon-metro-cross"></span>STOP GAME</button>
+                    </div>
+                }
+
+                {   
+                    this.state.gameOver === true && 
+                    <div className="row">
+                        <button onClick={this.quitGame} className="stop-game-btn"> <span className="Icon-metro-cross"></span> QUIT</button>
+                    </div>
+                }
+
 
              
             </div>

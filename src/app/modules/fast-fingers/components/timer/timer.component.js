@@ -45,7 +45,7 @@ class TimerComponent extends React.Component {
     }
     componentWillUnmount() {
       // this.props.onRef(undefined);
-      this.stopTimer();
+      // this.clearTimerComp();
     }
 
     method() {
@@ -101,8 +101,17 @@ class TimerComponent extends React.Component {
     }
 
     stopTimer() {
-      this.props.timeup();
       clearInterval(this.timerInterval);
+      this.props.timeup();
+    }
+
+    clearTimerComp() {
+      clearInterval(this.timerInterval);
+      try {
+        this.props.timeup();
+      } catch (error) {
+        
+      }
     }
 
 

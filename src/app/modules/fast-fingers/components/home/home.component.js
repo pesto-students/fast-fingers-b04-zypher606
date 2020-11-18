@@ -4,11 +4,6 @@ import BackgroundComponent from '../background/background.component';
 import logo from '../../../../../assets/img/Icon awesome-keyboard.png';
 import startArrow from '../../../../../assets/img/Icon awesome-play.png';
 
-const validateForm = errors => {
-    let valid = true;
-    Object.values(errors).forEach(val => val.length > 0 && (valid = false));
-    return valid;
-};
 
 class HomeComponent extends React.Component {
     

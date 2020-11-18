@@ -28,3 +28,33 @@
 .hidden {
     display: none !important;
 }
+
+.Icon-metro-cross {
+    width: 43.1px;
+    height: 43.1px;
+    margin: 0 17.3px 6.3px 0;
+    box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.16);
+    background-color: #ff5155;
+}
+
+.stop-game-btn {
+    color: #ff5155;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 27px;
+    background: transparent;
+    border: none;
+    position: fixed;
+    bottom: 20px;
+    padding: 0px;
+
+    &:active {
+        outline: none;
+        box-shadow: none;
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: none;
+    }
+}
